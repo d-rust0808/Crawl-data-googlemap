@@ -6,41 +6,214 @@ from selenium.webdriver.common.actions.wheel_input import ScrollOrigin
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.proxy import Proxy, ProxyType
 import time
 import datetime
 import numpy as np
 import pandas as pd
 from bs4 import BeautifulSoup
 import logging
+import threading
+import os
+import zipfile
+import tempfile
+from config import PROXY_HOST, PROXY_PORT, PROXY_USERNAME, PROXY_PASSWORD, PROXY_RETRY_COUNT
+from proxy_manager import proxy_manager
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+def create_proxy_auth_extension(proxy_auth):
+    """Tạo Chrome extension để xử lý proxy authentication"""
+    if not proxy_auth:
+        return None
+    
+    username, password = proxy_auth.split(':')
+    
+    # Tạo manifest.json
+    manifest_json = """
+    {
+        "version": "1.0.0",
+        "manifest_version": 2,
+        "name": "Chrome Proxy Auth",
+        "permissions": [
+            "proxy",
+            "tabs",
+            "unlimitedStorage",
+            "storage",
+            "<all_urls>",
+            "webRequest",
+            "webRequestBlocking"
+        ],
+        "background": {
+            "scripts": ["background.js"]
+        },
+        "minimum_chrome_version":"22.0.0"
+    }
+    """
+    
+    # Tạo background.js
+    background_js = f"""
+    var config = {{
+        mode: "fixed_servers",
+        rules: {{
+            singleProxy: {{
+                scheme: "http",
+                host: "{PROXY_HOST}",
+                port: parseInt({PROXY_PORT})
+            }},
+            bypassList: ["localhost"]
+        }}
+    }};
 
-def opened_link_chroome(url_search):
+    chrome.proxy.settings.set({{value: config, scope: "regular"}}, function() {{}});
+
+    function callbackFn(details) {{
+        return {{
+            authCredentials: {{
+                username: "{username}",
+                password: "{password}"
+            }}
+        }};
+    }}
+
+    chrome.webRequest.onAuthRequired.addListener(
+        callbackFn,
+        {{urls: ["<all_urls>"]}},
+        ['blocking']
+    );
+    """
+    
+    # Tạo extension zip file
+    pluginfile = os.path.join(tempfile.gettempdir(), 'proxy_auth_plugin.zip')
+    
+    with zipfile.ZipFile(pluginfile, 'w') as zp:
+        zp.writestr("manifest.json", manifest_json)
+        zp.writestr("background.js", background_js)
+    
+    return pluginfile
+
+
+def opened_link_chroome(url_search, use_proxy=True, retry_count=0):
+    """
+    Mở Chrome driver với proxy support và rotation
+    """
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     options.add_argument('--window-size=1920,1080')
-    options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
+    options.add_argument('--disable-blink-features=AutomationControlled')
+    options.add_argument('--disable-extensions')
+    options.add_argument('--disable-plugins')
+    options.add_argument('--disable-images')
+    options.add_argument('--disable-web-security')
+    options.add_argument('--allow-running-insecure-content')
+    options.add_argument('--disable-features=VizDisplayCompositor')
+    options.add_argument('--disable-ipc-flooding-protection')
+    options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
     
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=options)
-    driver.set_window_size(1920, 1080)
+    # Thêm stealth options
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option('useAutomationExtension', False)
+    options.add_argument("--disable-blink-features=AutomationControlled")
     
-    logger.info(f"🌐 Đang mở URL: {url_search}")
-    driver.get(url_search)
+    # Thêm proxy nếu được yêu cầu
+    current_proxy = None
+    if use_proxy:
+        current_proxy = proxy_manager.get_current_proxy()
+        if current_proxy:
+            proxy_string = proxy_manager.get_proxy_string(current_proxy)
+            proxy_auth = proxy_manager.get_proxy_auth(current_proxy)
+            
+            # Sử dụng format đúng cho proxy authentication
+            options.add_argument(f'--proxy-server=http://{proxy_string}')
+            
+            # Thêm proxy authentication extension
+            try:
+                extension_path = create_proxy_auth_extension(proxy_auth)
+                options.add_extension(extension_path)
+                logger.info(f"🔒 Sử dụng proxy: {proxy_string}")
+            except Exception as ext_error:
+                logger.warning(f"⚠️ Lỗi tạo proxy extension: {ext_error}")
+                # Fallback: không dùng proxy extension
+                use_proxy = False
+        else:
+            logger.warning("⚠️ Không có proxy available, chạy không proxy")
+            use_proxy = False
     
-    # Chờ trang load
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.TAG_NAME, "body"))
-    )
-    time.sleep(3)
-    
-    return driver
+    try:
+        # Tải ChromeDriver trước (không qua proxy)
+        logger.info("📥 Đang tải ChromeDriver...")
+        service = Service(ChromeDriverManager().install())
+        
+        # Tạo driver
+        driver = webdriver.Chrome(service=service, options=options)
+        driver.set_window_size(1920, 1080)
+        
+        # Thêm stealth JavaScript
+        driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+        driver.execute_script("Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]})")
+        driver.execute_script("Object.defineProperty(navigator, 'languages', {get: () => ['en-US', 'en']})")
+        driver.execute_script("window.chrome = { runtime: {} }")
+        
+        logger.info(f"🌐 Đang mở URL: {url_search}")
+        driver.get(url_search)
+        
+        # Chờ trang load
+        WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
+        time.sleep(5)  # Tăng thời gian chờ
+        
+        # Debug: Kiểm tra title và URL
+        try:
+            title = driver.title
+            current_url = driver.current_url
+            logger.info(f"📄 Page title: {title}")
+            logger.info(f"🔗 Current URL: {current_url}")
+            
+            # Kiểm tra xem có bị chặn không
+            if "blocked" in title.lower() or "access denied" in title.lower() or "captcha" in title.lower():
+                logger.warning("⚠️ Có thể bị chặn bởi Google Maps")
+        except Exception as debug_error:
+            logger.warning(f"⚠️ Lỗi debug: {debug_error}")
+        
+        # Reset retry count nếu thành công
+        proxy_manager.reset_retry()
+        return driver
+        
+    except Exception as e:
+        logger.warning(f"⚠️ Lỗi khởi tạo driver: {e}")
+        
+        # Đánh dấu proxy fail nếu có
+        if current_proxy:
+            proxy_manager.mark_proxy_failed(current_proxy)
+        
+        # Retry logic - thử không proxy nếu proxy fail
+        if proxy_manager.should_retry():
+            proxy_manager.increment_retry()
+            delay = proxy_manager.get_retry_delay()
+            logger.info(f"🔄 Retry {proxy_manager.retry_count}/{PROXY_RETRY_COUNT} sau {delay:.1f}s...")
+            time.sleep(delay)
+            
+            # Thử lại với proxy nếu còn retry
+            if proxy_manager.retry_count < PROXY_RETRY_COUNT:
+                return opened_link_chroome(url_search, use_proxy=use_proxy, retry_count=retry_count + 1)
+            else:
+                # Lần cuối thử không proxy
+                logger.warning("🔄 Thử lần cuối không proxy...")
+                return opened_link_chroome(url_search, use_proxy=False, retry_count=retry_count + 1)
+        else:
+            # Fallback: thử không proxy
+            if use_proxy:
+                logger.warning("🔄 Proxy fail, thử không proxy...")
+                return opened_link_chroome(url_search, use_proxy=False, retry_count=retry_count + 1)
+            else:
+                logger.error(f"❌ Không thể khởi tạo driver sau {PROXY_RETRY_COUNT} lần thử")
+                raise
 def Scrap_data(driver):
     logger.info("🔍 Bắt đầu scraping data từ Google Maps...")
     
@@ -53,6 +226,11 @@ def Scrap_data(driver):
         "a[jslog*='track:click']",  # Có jslog track click
         "div[class*='Nv2PK'] a",  # Link trong container Nv2PK
         "div[class*='Q2HXcd'] a",  # Link trong container Q2HXcd
+        "a[href*='/maps/place/']",  # Link trực tiếp đến place
+        "div[class*='THOPZb'] a",  # Link trong container THOPZb
+        "div[class*='VkpGBb'] a",  # Link trong container VkpGBb
+        "a[data-value]",  # Link có data-value
+        "div[jsaction] a",  # Link trong div có jsaction
     ]
     
     # Tìm elements để scroll
@@ -74,7 +252,7 @@ def Scrap_data(driver):
     
     action = ActionChains(driver)
     scroll_count = 0
-    max_scrolls = 10
+    max_scrolls = 10  # Giảm số lần scroll để tăng tốc độ
     
     while scroll_count < max_scrolls:
         try:
@@ -89,7 +267,7 @@ def Scrap_data(driver):
                 # Fallback scroll
                 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             
-            time.sleep(2)
+            time.sleep(1)  # Giảm thời gian chờ giữa các lần scroll
             
             # Kiểm tra xem có thêm elements mới không
             new_elements = []
@@ -225,7 +403,7 @@ def Scrap_data(driver):
             logger.warning(f"⚠️ Lỗi với container selector {container_selector}: {e}")
             continue
     
-    # Loại bỏ duplicate dựa trên tên cửa hàng thay vì link
+    # Loại bỏ duplicate dựa trên tên cửa hàng
     unique_res = []
     seen_names = set()
     duplicate_count = 0

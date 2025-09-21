@@ -1,94 +1,68 @@
-# Danh sách jobs crawl tất cả tiệm bánh TP.HCM
+# Danh sách jobs crawl tất cả tiệm bánh Hà Nội
 # Format: keyword|location|max_stores (0 = không giới hạn)
 
-# Từ khóa chính về bánh kem
-bánh kem|Ho Chi Minh City|0
-tiệm bánh kem|Ho Chi Minh City|0
-bakery|Ho Chi Minh City|0
-cake shop|Ho Chi Minh City|0
-bánh sinh nhật|Ho Chi Minh City|0
-birthday cake|Ho Chi Minh City|0
+# Ba Đình
+bánh kem|Ba Đình Hà Nội|0
+tiệm bánh kem|Ba Đình Hà Nội|0
+bakery|Ba Đình Hà Nội|0
+bánh kem|Ba Đình|0
 
-# Các loại bánh cụ thể
-bánh kem tươi|Ho Chi Minh City|0
-bánh kem chocolate|Ho Chi Minh City|0
-bánh kem dâu|Ho Chi Minh City|0
-bánh kem trái cây|Ho Chi Minh City|0
-bánh kem phô mai|Ho Chi Minh City|0
-bánh kem matcha|Ho Chi Minh City|0
-bánh kem tiramisu|Ho Chi Minh City|0
+# Hoàn Kiếm
+bánh kem|Hoàn Kiếm Hà Nội|0
+tiệm bánh kem|Hoàn Kiếm Hà Nội|0
+bakery|Hoàn Kiếm Hà Nội|0
+bánh kem|Hoàn Kiếm|0
 
-# Bánh mì và bánh ngọt
-bánh mì|Ho Chi Minh City|0
-tiệm bánh mì|Ho Chi Minh City|0
-bánh ngọt|Ho Chi Minh City|0
-tiệm bánh ngọt|Ho Chi Minh City|0
-pastry|Ho Chi Minh City|0
-bánh croissant|Ho Chi Minh City|0
-bánh donut|Ho Chi Minh City|0
+# Hai Bà Trưng
+bánh kem|Hai Bà Trưng Hà Nội|0
+tiệm bánh kem|Hai Bà Trưng Hà Nội|0
+bakery|Hai Bà Trưng Hà Nội|0
+bánh kem|Hai Bà Trưng|0
 
-# Bánh truyền thống
-bánh bông lan|Ho Chi Minh City|0
-bánh su kem|Ho Chi Minh City|0
-bánh flan|Ho Chi Minh City|0
-bánh pudding|Ho Chi Minh City|0
-bánh tart|Ho Chi Minh City|0
-bánh muffin|Ho Chi Minh City|0
-bánh cupcake|Ho Chi Minh City|0
+# Đống Đa
+bánh kem|Đống Đa Hà Nội|0
+tiệm bánh kem|Đống Đa Hà Nội|0
+bakery|Đống Đa Hà Nội|0
+bánh kem|Đống Đa|0
 
-# Bánh theo phong cách
-bánh kem Nhật|Ho Chi Minh City|0
-bánh kem Hàn|Ho Chi Minh City|0
-bánh kem Pháp|Ho Chi Minh City|0
-bánh kem Ý|Ho Chi Minh City|0
-bánh kem Mỹ|Ho Chi Minh City|0
+# Tây Hồ
+bánh kem|Tây Hồ Hà Nội|0
+tiệm bánh kem|Tây Hồ Hà Nội|0
+bakery|Tây Hồ Hà Nội|0
+bánh kem|Tây Hồ|0
 
-# Từ khóa tiếng Anh
-cake store|Ho Chi Minh City|0
-patisserie|Ho Chi Minh City|0
-confectionery|Ho Chi Minh City|0
-dessert shop|Ho Chi Minh City|0
-sweet shop|Ho Chi Minh City|0
+# Thanh Xuân
+bánh kem|Thanh Xuân Hà Nội|0
+tiệm bánh kem|Thanh Xuân Hà Nội|0
+bakery|Thanh Xuân Hà Nội|0
+bánh kem|Thanh Xuân|0
 
-# Từ khóa theo quận
-bánh kem quận 1|Ho Chi Minh City|0
-bánh kem quận 3|Ho Chi Minh City|0
-bánh kem quận 5|Ho Chi Minh City|0
-bánh kem quận 7|Ho Chi Minh City|0
-bánh kem quận 10|Ho Chi Minh City|0
-bánh kem quận 11|Ho Chi Minh City|0
-bánh kem quận Tân Bình|Ho Chi Minh City|0
-bánh kem quận Gò Vấp|Ho Chi Minh City|0
-bánh kem quận Bình Thạnh|Ho Chi Minh City|0
-bánh kem quận Phú Nhuận|Ho Chi Minh City|0
-bánh kem quận Tân Phú|Ho Chi Minh City|0
-bánh kem quận 12|Ho Chi Minh City|0
-bánh kem quận Thủ Đức|Ho Chi Minh City|0
-bánh kem quận 2|Ho Chi Minh City|0
-bánh kem quận 4|Ho Chi Minh City|0
-bánh kem quận 6|Ho Chi Minh City|0
-bánh kem quận 8|Ho Chi Minh City|0
-bánh kem quận 9|Ho Chi Minh City|0
-bánh kem quận Bình Tân|Ho Chi Minh City|0
-bánh kem quận Hóc Môn|Ho Chi Minh City|0
-bánh kem quận Củ Chi|Ho Chi Minh City|0
-bánh kem quận Bình Chánh|Ho Chi Minh City|0
-bánh kem quận Nhà Bè|Ho Chi Minh City|0
+# Long Biên
+bánh kem|Long Biên Hà Nội|0
+tiệm bánh kem|Long Biên Hà Nội|0
+bakery|Long Biên Hà Nội|0
+bánh kem|Long Biên|0
 
-# Từ khóa đặc biệt
-bánh kem cưới|Ho Chi Minh City|0
-wedding cake|Ho Chi Minh City|0
-bánh kem handmade|Ho Chi Minh City|0
-bánh kem organic|Ho Chi Minh City|0
-bánh kem không đường|Ho Chi Minh City|0
-bánh kem chay|Ho Chi Minh City|0
+# Nam Từ Liêm
+bánh kem|Nam Từ Liêm Hà Nội|0
+tiệm bánh kem|Nam Từ Liêm Hà Nội|0
+bakery|Nam Từ Liêm Hà Nội|0
+bánh kem|Nam Từ Liêm|0
 
-# Từ khóa theo khu vực nổi tiếng
-bánh kem Phú Mỹ Hưng|Ho Chi Minh City|0
-bánh kem Thảo Điền|Ho Chi Minh City|0
-bánh kem Landmark 81|Ho Chi Minh City|0
-bánh kem Vincom|Ho Chi Minh City|0
-bánh kem Crescent Mall|Ho Chi Minh City|0
-bánh kem Saigon Centre|Ho Chi Minh City|0
-bánh kem Diamond Plaza|Ho Chi Minh City|0
-bánh kem Takashimaya|Ho Chi Minh City|0
+# Bắc Từ Liêm
+bánh kem|Bắc Từ Liêm Hà Nội|0
+tiệm bánh kem|Bắc Từ Liêm Hà Nội|0
+bakery|Bắc Từ Liêm Hà Nội|0
+bánh kem|Bắc Từ Liêm|0
+
+# Hà Đông
+bánh kem|Hà Đông Hà Nội|0
+tiệm bánh kem|Hà Đông Hà Nội|0
+bakery|Hà Đông Hà Nội|0
+bánh kem|Hà Đông|0
+
+# Sơn Tây
+bánh kem|Sơn Tây Hà Nội|0
+tiệm bánh kem|Sơn Tây Hà Nội|0
+bakery|Sơn Tây Hà Nội|0
+bánh kem|Sơn Tây|0

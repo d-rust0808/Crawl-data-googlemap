@@ -211,7 +211,13 @@ def main():
                 
                 # Lưu vào database ngay lập tức
                 try:
+                    logger.info(f"💾 DEBUG: Chuẩn bị lưu store với phone: '{result.get('phone', 'N/A')}'")
+                    logger.info(f"💾 DEBUG: Store keys: {list(result.keys())}")
+                    
                     success = db.insert_store(result)
+                    
+                    logger.info(f"💾 DEBUG: insert_store returned: {success}")
+                    
                     if success:
                         new_stores += 1
                         logger.info(f"✅ Đã lưu cửa hàng mới: {result['nama'][:30]}...")
@@ -220,6 +226,8 @@ def main():
                         logger.info(f"⏭️ Cửa hàng đã tồn tại: {result['nama'][:30]}...")
                 except Exception as db_error:
                     logger.warning(f"⚠️ Lỗi lưu database: {db_error}")
+                    import traceback
+                    logger.warning(f"   Traceback: {traceback.format_exc()}")
                 
                 logger.info(f"✅ Hoàn thành cửa hàng {index+1}")
                 

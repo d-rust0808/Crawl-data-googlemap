@@ -6,22 +6,25 @@ Database handler cho Google Maps Crawler
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import logging
+import threading
 from config import DATABASE_URL, DB_MAX_OPEN_CONNS, DB_MAX_IDLE_CONNS, DB_CONN_MAX_LIFETIME
 
 logger = logging.getLogger(__name__)
 
 class DatabaseHandler:
-    """Handler để kết nối và thao tác với PostgreSQL database"""
+    """Handler để kết nối và thao tác với PostgreSQL database - Thread Safe"""
     
     def __init__(self):
         self.connection = None
+        self.lock = threading.Lock()  # Thread lock cho thread safety
         self.connect()
         self.create_tables()
     
     def connect(self):
         """Kết nối đến database"""
         try:
-            self.connection = psycopg2.connect(DATABASE_URL)
+            self.connection = psycopg2.connect(DATABASE_URL, connect_timeout=10)
+            self.connection.autocommit = False  # Đảm bảo autocommit = False
             logger.info("✅ Kết nối database thành công")
         except Exception as e:
             logger.error(f"❌ Lỗi kết nối database: {e}")
@@ -70,7 +73,7 @@ class DatabaseHandler:
             raise
     
     def store_exists(self, store_id):
-        """Kiểm tra cửa hàng đã tồn tại chưa"""
+        """Kiểm tra cửa hàng đã tồn tại chưa - Thread Safe"""
         try:
             cursor = self.connection.cursor()
             cursor.execute("SELECT id FROM stores WHERE id = %s", (store_id,))
@@ -82,11 +85,12 @@ class DatabaseHandler:
             return False
     
     def phone_exists(self, phone):
-        """Kiểm tra số điện thoại đã tồn tại chưa"""
+        """Kiểm tra số điện thoại đã tồn tại chưa - Thread Safe với timeout"""
+        if not phone or phone in ['Not Found', 'Error', '']:
+            return False
+            
+        # Không cần lock riêng cho read operation đơn giản
         try:
-            if not phone or phone in ['Not Found', 'Error', '']:
-                return False
-                
             cursor = self.connection.cursor()
             cursor.execute("SELECT id FROM stores WHERE phone = %s", (phone,))
             exists = cursor.fetchone() is not None
@@ -127,26 +131,64 @@ class DatabaseHandler:
             return None
     
     def insert_store(self, store_data):
-        """Thêm cửa hàng vào database (chỉ nếu chưa tồn tại)"""
-        try:
-            # Kiểm tra trùng lặp theo số điện thoại trước
-            phone = store_data.get('phone', '')
-            if phone and phone not in ['Not Found', 'Error', '']:
-                if self.phone_exists(phone):
-                    existing_store = self.get_store_by_phone(phone)
-                    logger.info(f"📞 Số điện thoại đã tồn tại: {phone} - {existing_store['name'] if existing_store else 'Unknown'}")
-                    return False  # Không lưu để tránh trùng lặp
+        """Thêm cửa hàng vào database (chỉ lọc theo số điện thoại) - Thread Safe với timeout"""
+        import time
+        
+        # Thử acquire lock với timeout để tránh deadlock
+        lock_acquired = self.lock.acquire(timeout=10)  # 10 giây timeout
+        
+        if not lock_acquired:
+            logger.error("❌ Không thể acquire database lock sau 10s - có thể deadlock!")
+            return False
             
-            # Kiểm tra xem cửa hàng đã tồn tại chưa (theo ID)
-            if self.store_exists(store_data['id']):
-                logger.info(f"⏭️ Cửa hàng đã tồn tại: {store_data['nama'][:30]}...")
-                return True  # Không lỗi, chỉ skip
+        try:
+            logger.info(f"🔒 Đã acquire database lock cho: {store_data.get('nama', 'Unknown')}")
+            
+            # Kiểm tra connection
+            if self.connection.closed:
+                logger.warning("🔄 Database connection bị đóng, reconnect...")
+                self.connect()
+            
+            # Chỉ lưu cửa hàng có số điện thoại hợp lệ
+            phone = store_data.get('phone', '')
+            if not phone or phone in ['Not Found', 'Error', '']:
+                logger.info(f"⏭️ Bỏ qua cửa hàng không có số điện thoại: {store_data.get('nama', 'Unknown')}")
+                return False  # Không lưu cửa hàng không có số điện thoại
+            
+            # Kiểm tra trùng lặp theo số điện thoại
+            logger.info(f"🔍 Kiểm tra phone exists: {phone}")
+            if self.phone_exists(phone):
+                existing_store = self.get_store_by_phone(phone)
+                logger.info(f"📞 Số điện thoại đã tồn tại: {phone} - {existing_store['name'] if existing_store else 'Unknown'}")
+                return False  # Không lưu để tránh trùng lặp
+            
+            # Tạo ID mới để tránh conflict
+            import hashlib
+            import random
+            original_id = store_data['id']
+            unique_id = f"{original_id}_{int(time.time() * 1000)}_{random.randint(1000, 9999)}"
+            store_data['id'] = unique_id
+            
+            logger.info(f"🔄 Chuẩn bị insert với ID: {unique_id}")
             
             cursor = self.connection.cursor()
             
+            # Sử dụng UPSERT để tránh lỗi duplicate key
             insert_sql = """
             INSERT INTO stores (id, name, rating, link, phone, address, website, plus_code, search_keyword, search_location, crawl_session)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (id) DO UPDATE SET
+                name = EXCLUDED.name,
+                rating = EXCLUDED.rating,
+                link = EXCLUDED.link,
+                phone = EXCLUDED.phone,
+                address = EXCLUDED.address,
+                website = EXCLUDED.website,
+                plus_code = EXCLUDED.plus_code,
+                search_keyword = EXCLUDED.search_keyword,
+                search_location = EXCLUDED.search_location,
+                crawl_session = EXCLUDED.crawl_session,
+                updated_at = CURRENT_TIMESTAMP
             """
             
             cursor.execute(insert_sql, (
@@ -163,15 +205,35 @@ class DatabaseHandler:
                 store_data.get('crawl_session', '')
             ))
             
+            logger.info(f"🔄 Đã execute SQL insert cho: {store_data['nama']}")
+            
             self.connection.commit()
+            logger.info(f"🔄 Đã commit transaction")
+            
             cursor.close()
             
-            logger.info(f"✅ Đã lưu cửa hàng mới: {store_data['nama'][:30]}...")
+            logger.info(f"✅ Đã lưu cửa hàng mới: {store_data['nama'][:30]}... (ID: {unique_id})")
             return True
             
         except Exception as e:
             logger.error(f"❌ Lỗi lưu cửa hàng: {e}")
+            logger.error(f"   Store data: {store_data}")
+            try:
+                self.connection.rollback()  # Rollback transaction khi có lỗi
+            except:
+                pass
+            try:
+                cursor.close()
+            except:
+                pass
             return False
+        finally:
+            # Luôn release lock trong finally
+            try:
+                self.lock.release()
+                logger.info(f"🔓 Đã release database lock cho: {store_data.get('nama', 'Unknown')}")
+            except:
+                pass
     
     def insert_stores_batch(self, stores_data, search_keyword="", search_location=""):
         """Thêm nhiều cửa hàng cùng lúc"""
