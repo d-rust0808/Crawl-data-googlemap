@@ -1,94 +1,94 @@
 # Danh sách jobs crawl tất cả tiệm bánh TP.HCM
-# Format: keyword|location|max_stores
+# Format: keyword|location|max_stores (0 = không giới hạn)
 
 # Từ khóa chính về bánh kem
-bánh kem|Ho Chi Minh City|100
-tiệm bánh kem|Ho Chi Minh City|100
-bakery|Ho Chi Minh City|100
-cake shop|Ho Chi Minh City|100
-bánh sinh nhật|Ho Chi Minh City|100
-birthday cake|Ho Chi Minh City|100
+bánh kem|Ho Chi Minh City|0
+tiệm bánh kem|Ho Chi Minh City|0
+bakery|Ho Chi Minh City|0
+cake shop|Ho Chi Minh City|0
+bánh sinh nhật|Ho Chi Minh City|0
+birthday cake|Ho Chi Minh City|0
 
 # Các loại bánh cụ thể
-bánh kem tươi|Ho Chi Minh City|80
-bánh kem chocolate|Ho Chi Minh City|80
-bánh kem dâu|Ho Chi Minh City|80
-bánh kem trái cây|Ho Chi Minh City|80
-bánh kem phô mai|Ho Chi Minh City|80
-bánh kem matcha|Ho Chi Minh City|80
-bánh kem tiramisu|Ho Chi Minh City|80
+bánh kem tươi|Ho Chi Minh City|0
+bánh kem chocolate|Ho Chi Minh City|0
+bánh kem dâu|Ho Chi Minh City|0
+bánh kem trái cây|Ho Chi Minh City|0
+bánh kem phô mai|Ho Chi Minh City|0
+bánh kem matcha|Ho Chi Minh City|0
+bánh kem tiramisu|Ho Chi Minh City|0
 
 # Bánh mì và bánh ngọt
-bánh mì|Ho Chi Minh City|100
-tiệm bánh mì|Ho Chi Minh City|100
-bánh ngọt|Ho Chi Minh City|100
-tiệm bánh ngọt|Ho Chi Minh City|100
-pastry|Ho Chi Minh City|100
-bánh croissant|Ho Chi Minh City|80
-bánh donut|Ho Chi Minh City|80
+bánh mì|Ho Chi Minh City|0
+tiệm bánh mì|Ho Chi Minh City|0
+bánh ngọt|Ho Chi Minh City|0
+tiệm bánh ngọt|Ho Chi Minh City|0
+pastry|Ho Chi Minh City|0
+bánh croissant|Ho Chi Minh City|0
+bánh donut|Ho Chi Minh City|0
 
 # Bánh truyền thống
-bánh bông lan|Ho Chi Minh City|80
-bánh su kem|Ho Chi Minh City|80
-bánh flan|Ho Chi Minh City|80
-bánh pudding|Ho Chi Minh City|80
-bánh tart|Ho Chi Minh City|80
-bánh muffin|Ho Chi Minh City|80
-bánh cupcake|Ho Chi Minh City|80
+bánh bông lan|Ho Chi Minh City|0
+bánh su kem|Ho Chi Minh City|0
+bánh flan|Ho Chi Minh City|0
+bánh pudding|Ho Chi Minh City|0
+bánh tart|Ho Chi Minh City|0
+bánh muffin|Ho Chi Minh City|0
+bánh cupcake|Ho Chi Minh City|0
 
 # Bánh theo phong cách
-bánh kem Nhật|Ho Chi Minh City|60
-bánh kem Hàn|Ho Chi Minh City|60
-bánh kem Pháp|Ho Chi Minh City|60
-bánh kem Ý|Ho Chi Minh City|60
-bánh kem Mỹ|Ho Chi Minh City|60
+bánh kem Nhật|Ho Chi Minh City|0
+bánh kem Hàn|Ho Chi Minh City|0
+bánh kem Pháp|Ho Chi Minh City|0
+bánh kem Ý|Ho Chi Minh City|0
+bánh kem Mỹ|Ho Chi Minh City|0
 
 # Từ khóa tiếng Anh
-cake store|Ho Chi Minh City|100
-patisserie|Ho Chi Minh City|80
-confectionery|Ho Chi Minh City|80
-dessert shop|Ho Chi Minh City|80
-sweet shop|Ho Chi Minh City|80
+cake store|Ho Chi Minh City|0
+patisserie|Ho Chi Minh City|0
+confectionery|Ho Chi Minh City|0
+dessert shop|Ho Chi Minh City|0
+sweet shop|Ho Chi Minh City|0
 
 # Từ khóa theo quận
-bánh kem quận 1|Ho Chi Minh City|50
-bánh kem quận 3|Ho Chi Minh City|50
-bánh kem quận 5|Ho Chi Minh City|50
-bánh kem quận 7|Ho Chi Minh City|50
-bánh kem quận 10|Ho Chi Minh City|50
-bánh kem quận 11|Ho Chi Minh City|50
-bánh kem quận Tân Bình|Ho Chi Minh City|50
-bánh kem quận Gò Vấp|Ho Chi Minh City|50
-bánh kem quận Bình Thạnh|Ho Chi Minh City|50
-bánh kem quận Phú Nhuận|Ho Chi Minh City|50
-bánh kem quận Tân Phú|Ho Chi Minh City|50
-bánh kem quận 12|Ho Chi Minh City|50
-bánh kem quận Thủ Đức|Ho Chi Minh City|50
-bánh kem quận 2|Ho Chi Minh City|50
-bánh kem quận 4|Ho Chi Minh City|50
-bánh kem quận 6|Ho Chi Minh City|50
-bánh kem quận 8|Ho Chi Minh City|50
-bánh kem quận 9|Ho Chi Minh City|50
-bánh kem quận Bình Tân|Ho Chi Minh City|50
-bánh kem quận Hóc Môn|Ho Chi Minh City|50
-bánh kem quận Củ Chi|Ho Chi Minh City|50
-bánh kem quận Bình Chánh|Ho Chi Minh City|50
-bánh kem quận Nhà Bè|Ho Chi Minh City|50
+bánh kem quận 1|Ho Chi Minh City|0
+bánh kem quận 3|Ho Chi Minh City|0
+bánh kem quận 5|Ho Chi Minh City|0
+bánh kem quận 7|Ho Chi Minh City|0
+bánh kem quận 10|Ho Chi Minh City|0
+bánh kem quận 11|Ho Chi Minh City|0
+bánh kem quận Tân Bình|Ho Chi Minh City|0
+bánh kem quận Gò Vấp|Ho Chi Minh City|0
+bánh kem quận Bình Thạnh|Ho Chi Minh City|0
+bánh kem quận Phú Nhuận|Ho Chi Minh City|0
+bánh kem quận Tân Phú|Ho Chi Minh City|0
+bánh kem quận 12|Ho Chi Minh City|0
+bánh kem quận Thủ Đức|Ho Chi Minh City|0
+bánh kem quận 2|Ho Chi Minh City|0
+bánh kem quận 4|Ho Chi Minh City|0
+bánh kem quận 6|Ho Chi Minh City|0
+bánh kem quận 8|Ho Chi Minh City|0
+bánh kem quận 9|Ho Chi Minh City|0
+bánh kem quận Bình Tân|Ho Chi Minh City|0
+bánh kem quận Hóc Môn|Ho Chi Minh City|0
+bánh kem quận Củ Chi|Ho Chi Minh City|0
+bánh kem quận Bình Chánh|Ho Chi Minh City|0
+bánh kem quận Nhà Bè|Ho Chi Minh City|0
 
 # Từ khóa đặc biệt
-bánh kem cưới|Ho Chi Minh City|60
-wedding cake|Ho Chi Minh City|60
-bánh kem handmade|Ho Chi Minh City|80
-bánh kem organic|Ho Chi Minh City|60
-bánh kem không đường|Ho Chi Minh City|60
-bánh kem chay|Ho Chi Minh City|60
+bánh kem cưới|Ho Chi Minh City|0
+wedding cake|Ho Chi Minh City|0
+bánh kem handmade|Ho Chi Minh City|0
+bánh kem organic|Ho Chi Minh City|0
+bánh kem không đường|Ho Chi Minh City|0
+bánh kem chay|Ho Chi Minh City|0
 
 # Từ khóa theo khu vực nổi tiếng
-bánh kem Phú Mỹ Hưng|Ho Chi Minh City|40
-bánh kem Thảo Điền|Ho Chi Minh City|40
-bánh kem Landmark 81|Ho Chi Minh City|40
-bánh kem Vincom|Ho Chi Minh City|40
-bánh kem Crescent Mall|Ho Chi Minh City|40
-bánh kem Saigon Centre|Ho Chi Minh City|40
-bánh kem Diamond Plaza|Ho Chi Minh City|40
-bánh kem Takashimaya|Ho Chi Minh City|40
+bánh kem Phú Mỹ Hưng|Ho Chi Minh City|0
+bánh kem Thảo Điền|Ho Chi Minh City|0
+bánh kem Landmark 81|Ho Chi Minh City|0
+bánh kem Vincom|Ho Chi Minh City|0
+bánh kem Crescent Mall|Ho Chi Minh City|0
+bánh kem Saigon Centre|Ho Chi Minh City|0
+bánh kem Diamond Plaza|Ho Chi Minh City|0
+bánh kem Takashimaya|Ho Chi Minh City|0

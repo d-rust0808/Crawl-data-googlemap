@@ -1,28 +1,13 @@
 version: "3.8"
 
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:13
-    container_name: google_maps_db
-    environment:
-      POSTGRES_DB: google-map-data
-      POSTGRES_USER: cdudu
-      POSTGRES_PASSWORD: cdudu.com
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
   # Google Maps Crawler
   crawler:
     build: .
     container_name: google_maps_crawler
-    depends_on:
-      - postgres
     environment:
-      # Database connection
-      DB_HOST: postgres
+      # Database connection - sử dụng database có sẵn trên server
+      DB_HOST: 163.223.8.12
       DB_PORT: 5432
       DB_USER: cdudu
       DB_PASSWORD: cdudu.com
@@ -35,6 +20,4 @@ services:
     volumes:
       - ./logs:/app/logs
       - ./list_jobs.txt:/app/list_jobs.txt
-
-volumes:
-  postgres_data:
+    restart: unless-stopped
