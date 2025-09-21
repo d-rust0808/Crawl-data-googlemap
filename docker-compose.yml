@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:13
+    container_name: google_maps_db
+    environment:
+      POSTGRES_DB: google-map-data
+      POSTGRES_USER: cdudu
+      POSTGRES_PASSWORD: cdudu.com
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Google Maps Crawler
+  crawler:
+    build: .
+    container_name: google_maps_crawler
+    depends_on:
+      - postgres
+    environment:
+      # Database connection
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: cdudu
+      DB_PASSWORD: cdudu.com
+      DB_NAME: google-map-data
+      DB_SSL_MODE: disable
+
+      # Chrome settings
+      DISPLAY: :99
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ./logs:/app/logs
+      - ./list_jobs.txt:/app/list_jobs.txt
+
+volumes:
+  postgres_data:
