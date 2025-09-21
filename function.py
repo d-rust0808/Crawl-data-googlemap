@@ -218,22 +218,31 @@ def Scrap_data(driver):
                         
                 except Exception as e:
                     logger.warning(f"⚠️ Lỗi khi parse cửa hàng {i+1}: {e}")
+                    logger.debug(f"   Container HTML: {str(area)[:200]}...")
                     continue
                     
         except Exception as e:
             logger.warning(f"⚠️ Lỗi với container selector {container_selector}: {e}")
             continue
     
-    # Loại bỏ duplicate
+    # Loại bỏ duplicate dựa trên tên cửa hàng thay vì link
     unique_res = []
-    seen_links = set()
+    seen_names = set()
+    duplicate_count = 0
     
     for item in res:
-        if item['link'] not in seen_links:
+        # Chuẩn hóa tên để so sánh (bỏ dấu, chuyển thành chữ thường)
+        import re
+        normalized_name = re.sub(r'[^\w\s]', '', item['nama'].lower().strip())
+        
+        if normalized_name not in seen_names:
             unique_res.append(item)
-            seen_links.add(item['link'])
+            seen_names.add(normalized_name)
+        else:
+            duplicate_count += 1
+            logger.debug(f"🔄 Bỏ qua duplicate: {item['nama'][:30]}... (tên đã có)")
     
-    logger.info(f"🎉 Hoàn thành scraping! Tìm thấy {len(unique_res)} cửa hàng")
+    logger.info(f"🎉 Hoàn thành scraping! Tìm thấy {len(res)} cửa hàng, {duplicate_count} duplicate, {len(unique_res)} unique")
     
     df = pd.DataFrame(unique_res)
     return df
