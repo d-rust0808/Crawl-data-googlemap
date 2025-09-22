@@ -24,10 +24,25 @@ class BatchCrawler:
             'total_stores': 0,
             'new_stores': 0,
             'duplicate_stores': 0,
+            'cached_stores': 0,  # Thêm thống kê cache
             'start_time': None,
             'end_time': None
         }
         self.stats_lock = threading.Lock()  # Thread lock cho stats
+        
+        # Cache RAM để tránh scrape lại cửa hàng đã tìm thấy
+        self.store_cache = {}  # {store_link: store_data}
+        self.cache_lock = threading.Lock()  # Thread lock cho cache
+    
+    def get_cached_store(self, store_link):
+        """Lấy cửa hàng từ cache nếu có"""
+        with self.cache_lock:
+            return self.store_cache.get(store_link)
+    
+    def cache_store(self, store_link, store_data):
+        """Lưu cửa hàng vào cache"""
+        with self.cache_lock:
+            self.store_cache[store_link] = store_data
     
     def load_jobs_from_txt(self, file_path):
         """Load danh sách job từ file TXT - format: keyword|location|max_stores"""
@@ -106,17 +121,33 @@ class BatchCrawler:
                     try:
                         logger.info(f"📝 Đang xử lý cửa hàng {index+1}/{len(df)}: {row['nama'][:30]}...")
                         
-                        # Scrape chi tiết
-                        try:
-                            details = scrape_store_details(driver, row['link'])
-                        except Exception as scrape_error:
-                            logger.warning(f"⚠️ Lỗi scrape chi tiết: {scrape_error}")
+                        # Kiểm tra cache trước
+                        store_link = row['link']
+                        cached_store = self.get_cached_store(store_link)
+                        
+                        if cached_store:
+                            logger.info(f"💾 Sử dụng cache cho: {row['nama'][:30]}...")
                             details = {
-                                'phone': 'Error',
-                                'address': 'Error',
-                                'website': 'Error',
-                                'plus_code': 'Error'
+                                'phone': cached_store.get('phone', 'Not Found'),
+                                'address': cached_store.get('address', 'Not Found'),
+                                'website': cached_store.get('website', 'Not Found'),
+                                'plus_code': cached_store.get('plus_code', 'Not Found')
                             }
+                            # Cập nhật thống kê cache
+                            with self.stats_lock:
+                                self.stats['cached_stores'] += 1
+                        else:
+                            # Scrape chi tiết nếu chưa có trong cache
+                            try:
+                                details = scrape_store_details(driver, row['link'])
+                            except Exception as scrape_error:
+                                logger.warning(f"⚠️ Lỗi scrape chi tiết: {scrape_error}")
+                                details = {
+                                    'phone': 'Error',
+                                    'address': 'Error',
+                                    'website': 'Error',
+                                    'plus_code': 'Error'
+                                }
                         
                         # Tạo dữ liệu cửa hàng
                         store_data = {
@@ -132,6 +163,15 @@ class BatchCrawler:
                             'search_location': job['location'],
                             'crawl_session': batch_session
                         }
+                        
+                        # Lưu vào cache nếu chưa có
+                        if not cached_store:
+                            self.cache_store(store_link, {
+                                'phone': details['phone'],
+                                'address': details['address'],
+                                'website': details['website'],
+                                'plus_code': details['plus_code']
+                            })
                         
                         # Lưu vào database
                         try:
@@ -160,8 +200,8 @@ class BatchCrawler:
                             import traceback
                             logger.error(f"   Traceback: {traceback.format_exc()}")
                         
-                        # Nghỉ một chút giữa các cửa hàng (giảm thời gian chờ)
-                        time.sleep(0.5)  # Giảm từ 2s xuống 0.5s
+                        # Nghỉ một chút giữa các cửa hàng để tránh bị chặn
+                        time.sleep(1.0)  # Tăng lên 1s để tránh bị chặn
                         
                     except Exception as e:
                         logger.warning(f"⚠️ Lỗi xử lý cửa hàng: {e}")
@@ -220,6 +260,12 @@ class BatchCrawler:
                     try:
                         result = future.result()
                         logger.info(f"✅ Job {result['id']} hoàn thành: {result['status']}")
+                        
+                        # Thêm delay giữa các job để tránh bị chặn
+                        if MAX_WORKERS == 1:  # Chỉ delay khi chạy 1 luồng
+                            logger.info(f"⏳ Chờ {THREAD_DELAY}s trước job tiếp theo...")
+                            time.sleep(THREAD_DELAY)
+                            
                     except Exception as exc:
                         logger.error(f"❌ Job {job['id']} lỗi: {exc}")
                         job['status'] = 'error'
@@ -247,6 +293,8 @@ class BatchCrawler:
         print(f"🏪 Tổng cửa hàng tìm thấy: {self.stats['total_stores']}")
         print(f"🆕 Cửa hàng mới: {self.stats['new_stores']}")
         print(f"🔄 Cửa hàng trùng lặp: {self.stats['duplicate_stores']}")
+        print(f"💾 Cửa hàng từ cache: {self.stats['cached_stores']}")
+        print(f"📊 Cache size: {len(self.store_cache)} cửa hàng")
         
         # Thống kê database
         total_in_db = self.db.get_store_count()
@@ -257,21 +305,10 @@ def main():
     crawler = BatchCrawler()
     
     print("🔍 === BATCH CRAWLER ===")
-    print("Chọn file jobs:")
-    print("1. list_jobs.txt (mặc định)")
-    print("2. Nhập đường dẫn file khác")
+    print("🚀 Tự động chạy với list_jobs.txt...")
     
-    choice = input("Lựa chọn (1/2): ").strip()
-    
-    if choice == "1":
-        file_path = "list_jobs.txt"
-    elif choice == "2":
-        file_path = input("📁 Đường dẫn file TXT: ").strip()
-    else:
-        print("❌ Lựa chọn không hợp lệ")
-        return
-    
-    # Load jobs
+    # Load jobs từ file mặc định
+    file_path = "list_jobs.txt"
     jobs = crawler.load_jobs_from_txt(file_path)
     
     if not jobs:
@@ -283,11 +320,7 @@ def main():
     for job in jobs:
         print(f"  {job['id']}. '{job['keyword']}' tại '{job['location']}' (tối đa {job['max_stores']})")
     
-    # Xác nhận
-    confirm = input(f"\n❓ Bắt đầu crawl {len(jobs)} jobs? (y/n): ").strip().lower()
-    if confirm != 'y':
-        print("👋 Hủy bỏ!")
-        return
+    print(f"\n🚀 Bắt đầu crawl {len(jobs)} jobs...")
     
     # Chạy batch crawl
     results = crawler.run_batch_crawl(jobs)

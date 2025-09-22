@@ -1,68 +1,46 @@
-# Danh sách jobs crawl tất cả tiệm bánh Hà Nội
+# Danh sách jobs crawl Bạc Liêu
 # Format: keyword|location|max_stores (0 = không giới hạn)
 
-# Ba Đình
-bánh kem|Ba Đình Hà Nội|0
-tiệm bánh kem|Ba Đình Hà Nội|0
-bakery|Ba Đình Hà Nội|0
-bánh kem|Ba Đình|0
+# Từ khóa chính - tìm kiếm Bạc Liêu
+bánh kem|Bạc Liêu|0
+bánh sinh nhật|Bạc Liêu|0
+tiệm bánh sinh nhật|Bạc Liêu|0
+bakery|Bạc Liêu|0
+bánh ngọt|Bạc Liêu|0
+bánh|Bạc Liêu|0
 
-# Hoàn Kiếm
-bánh kem|Hoàn Kiếm Hà Nội|0
-tiệm bánh kem|Hoàn Kiếm Hà Nội|0
-bakery|Hoàn Kiếm Hà Nội|0
-bánh kem|Hoàn Kiếm|0
+# Thành phố Bạc Liêu
+bánh kem|TP Bạc Liêu|0
+bánh kem|Thành phố Bạc Liêu|0
+bánh kem|Bạc Liêu city|0
 
-# Hai Bà Trưng
-bánh kem|Hai Bà Trưng Hà Nội|0
-tiệm bánh kem|Hai Bà Trưng Hà Nội|0
-bakery|Hai Bà Trưng Hà Nội|0
-bánh kem|Hai Bà Trưng|0
+# Các huyện trong Bạc Liêu
+bánh kem|Huyện Đông Hải|0
+bánh kem|Huyện Giá Rai|0
+bánh kem|Huyện Hòa Bình|0
+bánh kem|Huyện Hồng Dân|0
+bánh kem|Huyện Phước Long|0
+bánh kem|Huyện Vĩnh Lợi|0
 
-# Đống Đa
-bánh kem|Đống Đa Hà Nội|0
-tiệm bánh kem|Đống Đa Hà Nội|0
-bakery|Đống Đa Hà Nội|0
-bánh kem|Đống Đa|0
+# Các thị trấn
+bánh kem|Thị trấn Giá Rai|0
+bánh kem|Thị trấn Hòa Bình|0
+bánh kem|Thị trấn Hồng Dân|0
+bánh kem|Thị trấn Ngan Dừa|0
+bánh kem|Thị trấn Phước Long|0
+bánh kem|Thị trấn Vĩnh Lợi|0
 
-# Tây Hồ
-bánh kem|Tây Hồ Hà Nội|0
-tiệm bánh kem|Tây Hồ Hà Nội|0
-bakery|Tây Hồ Hà Nội|0
-bánh kem|Tây Hồ|0
-
-# Thanh Xuân
-bánh kem|Thanh Xuân Hà Nội|0
-tiệm bánh kem|Thanh Xuân Hà Nội|0
-bakery|Thanh Xuân Hà Nội|0
-bánh kem|Thanh Xuân|0
-
-# Long Biên
-bánh kem|Long Biên Hà Nội|0
-tiệm bánh kem|Long Biên Hà Nội|0
-bakery|Long Biên Hà Nội|0
-bánh kem|Long Biên|0
-
-# Nam Từ Liêm
-bánh kem|Nam Từ Liêm Hà Nội|0
-tiệm bánh kem|Nam Từ Liêm Hà Nội|0
-bakery|Nam Từ Liêm Hà Nội|0
-bánh kem|Nam Từ Liêm|0
-
-# Bắc Từ Liêm
-bánh kem|Bắc Từ Liêm Hà Nội|0
-tiệm bánh kem|Bắc Từ Liêm Hà Nội|0
-bakery|Bắc Từ Liêm Hà Nội|0
-bánh kem|Bắc Từ Liêm|0
-
-# Hà Đông
-bánh kem|Hà Đông Hà Nội|0
-tiệm bánh kem|Hà Đông Hà Nội|0
-bakery|Hà Đông Hà Nội|0
-bánh kem|Hà Đông|0
-
-# Sơn Tây
-bánh kem|Sơn Tây Hà Nội|0
-tiệm bánh kem|Sơn Tây Hà Nội|0
-bakery|Sơn Tây Hà Nội|0
-bánh kem|Sơn Tây|0
+# Từ khóa phụ
+bánh kem gần đây|Bạc Liêu|0
+tiệm bánh gần đây|Bạc Liêu|0
+cửa hàng bánh kem|Bạc Liêu|0
+shop bánh kem|Bạc Liêu|0
+bánh kem tươi|Bạc Liêu|0
+bánh kem handmade|Bạc Liêu|0
+bánh kem TP Bạc Liêu|TP Bạc Liêu|0
+bánh kem Đông Hải|Đông Hải|0
+bánh kem Giá Rai|Giá Rai|0
+bánh kem Hòa Bình|Hòa Bình|0
+bánh kem Hồng Dân|Hồng Dân|0
+bánh kem Phước Long|Phước Long|0
+bánh kem Vĩnh Lợi|Vĩnh Lợi|0

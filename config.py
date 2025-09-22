@@ -25,12 +25,12 @@ DB_CONFIG = {
 }
 
 # Proxy Configuration
-PROXY_HOST = os.getenv("PROXY_HOST", "116.96.52.121")
-PROXY_PORT = os.getenv("PROXY_PORT", "55090")
-PROXY_USERNAME = os.getenv("PROXY_USERNAME", "88200")
-PROXY_PASSWORD = os.getenv("PROXY_PASSWORD", "88200")
+PROXY_HOST = os.getenv("PROXY_HOST", "42.114.125.153")
+PROXY_PORT = os.getenv("PROXY_PORT", "34441")
+PROXY_USERNAME = os.getenv("PROXY_USERNAME", "khljtiNj3Kd")
+PROXY_PASSWORD = os.getenv("PROXY_PASSWORD", "fdkm3nbjg45d")
 
 # Threading Configuration
-MAX_WORKERS = int(os.getenv("MAX_WORKERS", "3"))  # Số luồng tối đa
-THREAD_DELAY = float(os.getenv("THREAD_DELAY", "2.0"))  # Delay giữa các request (giây)
+MAX_WORKERS = int(os.getenv("MAX_WORKERS", "1"))  # Số luồng tối đa (giảm xuống 1 để tránh trùng lặp)
+THREAD_DELAY = float(os.getenv("THREAD_DELAY", "3.0"))  # Delay giữa các request (giây) - tăng lên
 PROXY_RETRY_COUNT = int(os.getenv("PROXY_RETRY_COUNT", "3"))  # Số lần retry khi proxy fail

@@ -33,6 +33,7 @@ class DatabaseHandler:
     def create_tables(self):
         """Tạo bảng nếu chưa tồn tại"""
         try:
+            logger.info("🔧 Đang tạo bảng stores...")
             cursor = self.connection.cursor()
             
             # Tạo bảng stores
@@ -54,12 +55,17 @@ class DatabaseHandler:
             );
             """
             
+            logger.info("🔧 Đang execute CREATE TABLE...")
             cursor.execute(create_table_sql)
+            logger.info("✅ CREATE TABLE thành công")
             
             # Kiểm tra và thêm cột crawl_session nếu chưa có
             try:
+                logger.info("🔧 Đang kiểm tra cột crawl_session...")
                 cursor.execute("ALTER TABLE stores ADD COLUMN IF NOT EXISTS crawl_session VARCHAR(100);")
+                logger.info("🔧 Đang commit...")
                 self.connection.commit()
+                logger.info("✅ Commit thành công")
                 logger.info("✅ Đã thêm cột crawl_session nếu chưa có")
             except Exception as e:
                 logger.info(f"ℹ️ Cột crawl_session đã tồn tại hoặc lỗi: {e}")

@@ -137,12 +137,10 @@ def opened_link_chroome(url_search, use_proxy=True, retry_count=0):
                 options.add_extension(extension_path)
                 logger.info(f"🔒 Sử dụng proxy: {proxy_string}")
             except Exception as ext_error:
-                logger.warning(f"⚠️ Lỗi tạo proxy extension: {ext_error}")
-                # Fallback: không dùng proxy extension
-                use_proxy = False
+                logger.error(f"❌ Lỗi tạo proxy extension: {ext_error}")
+                raise Exception(f"❌ Không thể tạo proxy extension: {ext_error}")
         else:
-            logger.warning("⚠️ Không có proxy available, chạy không proxy")
-            use_proxy = False
+            raise Exception("❌ BẮT BUỘC phải có proxy!")
     
     try:
         # Tải ChromeDriver trước (không qua proxy)
@@ -203,17 +201,13 @@ def opened_link_chroome(url_search, use_proxy=True, retry_count=0):
             if proxy_manager.retry_count < PROXY_RETRY_COUNT:
                 return opened_link_chroome(url_search, use_proxy=use_proxy, retry_count=retry_count + 1)
             else:
-                # Lần cuối thử không proxy
-                logger.warning("🔄 Thử lần cuối không proxy...")
-                return opened_link_chroome(url_search, use_proxy=False, retry_count=retry_count + 1)
+                # Không cho phép chạy không proxy
+                logger.error(f"❌ Proxy fail sau {PROXY_RETRY_COUNT} lần thử - BẮT BUỘC phải dùng proxy!")
+                raise Exception("❌ BẮT BUỘC phải dùng proxy!")
         else:
-            # Fallback: thử không proxy
-            if use_proxy:
-                logger.warning("🔄 Proxy fail, thử không proxy...")
-                return opened_link_chroome(url_search, use_proxy=False, retry_count=retry_count + 1)
-            else:
-                logger.error(f"❌ Không thể khởi tạo driver sau {PROXY_RETRY_COUNT} lần thử")
-                raise
+            # Không cho phép chạy không proxy
+            logger.error("❌ Proxy fail - BẮT BUỘC phải dùng proxy!")
+            raise Exception("❌ BẮT BUỘC phải dùng proxy!")
 def Scrap_data(driver):
     logger.info("🔍 Bắt đầu scraping data từ Google Maps...")
     
