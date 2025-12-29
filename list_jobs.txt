@@ -1,46 +1,50 @@
-# Danh sách jobs crawl Bạc Liêu
+# Danh sách jobs crawl TP HCM
 # Format: keyword|location|max_stores (0 = không giới hạn)
 
-# Từ khóa chính - tìm kiếm Bạc Liêu
-bánh kem|Bạc Liêu|0
-bánh sinh nhật|Bạc Liêu|0
-tiệm bánh sinh nhật|Bạc Liêu|0
-bakery|Bạc Liêu|0
-bánh ngọt|Bạc Liêu|0
-bánh|Bạc Liêu|0
+# Từ khóa chính - tìm kiếm TP HCM
+shop hoa|TP HCM|0
+cửa hàng hoa|TP HCM|0
+tiệm hoa|TP HCM|0
+flower shop|TP HCM|0
+hoa tươi|TP HCM|0
+shop hoa tươi|TP HCM|0
 
-# Thành phố Bạc Liêu
-bánh kem|TP Bạc Liêu|0
-bánh kem|Thành phố Bạc Liêu|0
-bánh kem|Bạc Liêu city|0
+# Thành phố Hồ Chí Minh
+shop hoa|TP Hồ Chí Minh|0
+shop hoa|Ho Chi Minh City|0
+shop hoa|Thành phố Hồ Chí Minh|0
 
-# Các huyện trong Bạc Liêu
-bánh kem|Huyện Đông Hải|0
-bánh kem|Huyện Giá Rai|0
-bánh kem|Huyện Hòa Bình|0
-bánh kem|Huyện Hồng Dân|0
-bánh kem|Huyện Phước Long|0
-bánh kem|Huyện Vĩnh Lợi|0
-
-# Các thị trấn
-bánh kem|Thị trấn Giá Rai|0
-bánh kem|Thị trấn Hòa Bình|0
-bánh kem|Thị trấn Hồng Dân|0
-bánh kem|Thị trấn Ngan Dừa|0
-bánh kem|Thị trấn Phước Long|0
-bánh kem|Thị trấn Vĩnh Lợi|0
+# Các quận trong TP HCM
+shop hoa|Quận 1|0
+shop hoa|Quận 2|0
+shop hoa|Quận 3|0
+shop hoa|Quận 4|0
+shop hoa|Quận 5|0
+shop hoa|Quận 6|0
+shop hoa|Quận 7|0
+shop hoa|Quận 8|0
+shop hoa|Quận 9|0
+shop hoa|Quận 10|0
+shop hoa|Quận 11|0
+shop hoa|Quận 12|0
+shop hoa|Quận Bình Thạnh|0
+shop hoa|Quận Tân Bình|0
+shop hoa|Quận Tân Phú|0
+shop hoa|Quận Phú Nhuận|0
+shop hoa|Quận Gò Vấp|0
 
 # Từ khóa phụ
-bánh kem gần đây|Bạc Liêu|0
-tiệm bánh gần đây|Bạc Liêu|0
-cửa hàng bánh kem|Bạc Liêu|0
-shop bánh kem|Bạc Liêu|0
-bánh kem tươi|Bạc Liêu|0
-bánh kem handmade|Bạc Liêu|0
-bánh kem TP Bạc Liêu|TP Bạc Liêu|0
-bánh kem Đông Hải|Đông Hải|0
-bánh kem Giá Rai|Giá Rai|0
-bánh kem Hòa Bình|Hòa Bình|0
-bánh kem Hồng Dân|Hồng Dân|0
-bánh kem Phước Long|Phước Long|0
-bánh kem Vĩnh Lợi|Vĩnh Lợi|0
+shop hoa gần đây|TP HCM|0
+tiệm hoa gần đây|TP HCM|0
+cửa hàng hoa tươi|TP HCM|0
+shop hoa tươi|TP HCM|0
+hoa tươi|TP HCM|0
+hoa handmade|TP HCM|0
+shop hoa TP HCM|TP HCM|0
+shop hoa Quận 1|Quận 1|0
+shop hoa Quận 2|Quận 2|0
+shop hoa Quận 3|Quận 3|0
+shop hoa Quận 7|Quận 7|0
+shop hoa Bình Thạnh|Bình Thạnh|0
+shop hoa Tân Bình|Tân Bình|0
+shop hoa Gò Vấp|Gò Vấp|0
